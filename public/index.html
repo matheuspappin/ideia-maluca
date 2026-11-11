@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miwra Automator Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-glow"></div>
+    
+    <div class="container">
+        <!-- Painel Lateral: Configurações -->
+        <aside class="sidebar glass-panel">
+            <div class="brand">
+                <div class="logo-pulse"></div>
+                <h1>Miwra <span>Automator</span></h1>
+            </div>
+            
+            <form id="config-form">
+                <div id="accounts-container">
+                    <!-- Gerado pelo JS -->
+                </div>
+                
+                <template id="account-template">
+                    <div class="account-entry" style="position: relative; border-left: 2px solid #3b82f6; padding-left: 15px; margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <label style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">E-MAIL DO MIWRA</label>
+                            <label style="display: flex; align-items: center; gap: 5px; cursor: pointer; background: var(--panel-bg); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2);">
+                                <input type="checkbox" class="account-active" checked style="accent-color: #10b981; width: 14px; height: 14px; cursor: pointer;">
+                                <span style="font-size: 0.8rem; font-weight: bold; color: #10b981;">Ativa</span>
+                            </label>
+                        </div>
+                        <div class="input-group">
+                            <input type="email" class="account-email" placeholder="seu@email.com" required>
+                        </div>
+                        <div class="input-group" style="margin-bottom: 10px; margin-top: 10px;">
+                            <label style="font-size: 0.8rem; color: #94a3b8; font-weight: 600;">SENHA</label>
+                            <input type="password" class="account-password" placeholder="••••••••" required>
+                        </div>
+                        <button type="button" class="btn-remove-account" style="display: none; background: #ef4444; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.8rem; margin-top: 5px;">Remover Conta</button>
+                    </div>
+                </template>
+                
+                <button type="button" id="btn-add-account" class="btn-glow" style="margin-bottom: 25px; padding: 8px; font-size: 0.9rem; background: linear-gradient(135deg, #4f46e5, #3b82f6);">
+                    + ADICIONAR CONTA
+                </button>
+
+                <div class="input-group">
+                    <label for="runsPerDay">Gerações por Dia</label>
+                    <div class="slider-container">
+                        <input type="range" id="runsPerDay" min="1" max="12" value="3">
+                        <span id="runs-value">3x</span>
+                    </div>
+                    <p class="help-text" id="runs-help">O robô rodará a cada 8 horas.</p>
+                </div>
+
+                <div class="input-group" style="flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; margin-bottom: 25px;">
+                    <input type="checkbox" id="simultaneous-execution" checked style="width: 20px; height: 20px; cursor: pointer; accent-color: #3b82f6;">
+                    <label for="simultaneous-execution" style="margin: 0; cursor: pointer; font-size: 0.9rem;">Rodar todas juntas (Simultâneo)</label>
+                </div>
+
+                <button type="submit" id="btn-start" class="btn-glow">
+                    <span class="btn-text">INICIAR ROBÔ</span>
+                </button>
+
+                <button type="button" id="btn-approve-only" class="btn-glow btn-approve">
+                    <span class="btn-text">LIMPAR FILA (APROVAR)</span>
+                </button>
+                
+                <button type="button" id="btn-stop" class="btn-danger" style="display: none;">
+                    PARAR ROBÔ
+                </button>
+
+                <button type="button" id="btn-live" class="btn-glow" style="display: none; background: linear-gradient(135deg, #10b981, #059669);">
+                    👓 ASSISTIR ROBÔ
+                </button>
+            </form>
+            
+            <div class="status-indicator">
+                <div class="dot" id="status-dot"></div>
+                <span id="status-text">Desconectado</span>
+            </div>
+        </aside>
+
+        <!-- Painel Principal: Terminal -->
+        <main class="main-content glass-panel">
+            <div class="terminal-header">
+                <div class="window-controls">
+                    <div class="control red"></div>
+                    <div class="control yellow"></div>
+                    <div class="control green"></div>
+                </div>
+                <span class="terminal-title">miwra-daemon ~ bash</span>
+            </div>
+            
+            <div class="terminal-body" id="terminal">
+                <div class="log-line system">Miwra Automator v2.0 - Terminal Inicializado</div>
+                <div class="log-line system">Aguardando comandos...</div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal de Câmera Ao Vivo -->
+    <div id="live-modal" class="modal">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h2>📹 Transmissão Ao Vivo do Robô</h2>
+                <span class="close-btn" id="close-modal">&times;</span>
+            </div>
+            <div class="video-container">
+                <img id="live-screen" src="" alt="Aguardando imagem..." />
+                <div class="recording-dot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
